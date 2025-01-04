@@ -1,0 +1,21 @@
+{
+    "name": "api-gateway",
+    "version": "1.0.0",
+    "description": "API Gateway for Distributed Microservices Platform",
+    "main": "src/app.js",
+    "scripts": {
+      "start": "node src/app.js",
+      "dev": "nodemon src/app.js"
+    },
+    "dependencies": {
+      "axios": "^1.0.0",
+      "dotenv": "^16.0.3",
+      "express": "^4.18.2",
+      "http-proxy-middleware": "^2.0.6",
+      "morgan": "^1.10.0"
+    },
+    "devDependencies": {
+      "nodemon": "^3.0.0"
+    }
+  }
+  
