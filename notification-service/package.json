@@ -1,0 +1,21 @@
+{
+    "name": "notification-service",
+    "version": "1.0.0",
+    "description": "A service for sending notifications via email, SMS, or push.",
+    "main": "src/app.js",
+    "scripts": {
+      "start": "node src/app.js",
+      "dev": "nodemon src/app.js"
+    },
+    "dependencies": {
+      "body-parser": "^1.20.2",
+      "dotenv": "^16.0.4",
+      "express": "^4.18.2"
+    },
+    "devDependencies": {
+      "nodemon": "^3.0.1"
+    },
+    "author": "Aditya Pratap Bhuyan",
+    "license": "GPL-3.0"
+  }
+  

@@ -1,0 +1,145 @@
+version: '3.8'
+
+services:
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+      - API_GATEWAY_PORT=4000
+    depends_on:
+      - user-service
+      - inventory-service
+      - payment-service
+      - notification-service
+    networks:
+      - app-network
+
+  # User Service
+  user-service:
+    build:
+      context: ./user-service
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - SERVICE_PORT=5000
+      - DB_CONNECTION_STRING=mongodb://mongo-user-service:27017/user-service
+      - MESSAGE_BROKER_URL=amqp://rabbitmq
+      - TRACING_URL=http://zipkin:9411
+    depends_on:
+      - mongo-user-service
+      - rabbitmq
+      - zipkin
+    networks:
+      - app-network
+
+  # Inventory Service
+  inventory-service:
+    build:
+      context: ./inventory-service
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=development
+      - SERVICE_PORT=5001
+      - DB_CONNECTION_STRING=mongodb://mongo-inventory-service:27017/inventory-service
+      - MESSAGE_BROKER_URL=amqp://rabbitmq
+      - TRACING_URL=http://zipkin:9411
+    depends_on:
+      - mongo-inventory-service
+      - rabbitmq
+      - zipkin
+    networks:
+      - app-network
+
+  # Payment Service
+  payment-service:
+    build:
+      context: ./payment-service
+    ports:
+      - "5002:5002"
+    environment:
+      - NODE_ENV=development
+      - SERVICE_PORT=5002
+      - DB_CONNECTION_STRING=mongodb://mongo-payment-service:27017/payment-service
+      - MESSAGE_BROKER_URL=amqp://rabbitmq
+      - TRACING_URL=http://zipkin:9411
+    depends_on:
+      - mongo-payment-service
+      - rabbitmq
+      - zipkin
+    networks:
+      - app-network
+
+  # Notification Service
+  notification-service:
+    build:
+      context: ./notification-service
+    ports:
+      - "5003:5003"
+    environment:
+      - NODE_ENV=development
+      - SERVICE_PORT=5003
+      - DB_CONNECTION_STRING=mongodb://mongo-notification-service:27017/notification-service
+      - MESSAGE_BROKER_URL=amqp://rabbitmq
+      - TRACING_URL=http://zipkin:9411
+    depends_on:
+      - mongo-notification-service
+      - rabbitmq
+      - zipkin
+    networks:
+      - app-network
+
+  # MongoDB for each service
+  mongo-user-service:
+    image: mongo:6.0
+    container_name: mongo-user-service
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
+  mongo-inventory-service:
+    image: mongo:6.0
+    container_name: mongo-inventory-service
+    networks:
+      - app-network
+
+  mongo-payment-service:
+    image: mongo:6.0
+    container_name: mongo-payment-service
+    networks:
+      - app-network
+
+  mongo-notification-service:
+    image: mongo:6.0
+    container_name: mongo-notification-service
+    networks:
+      - app-network
+
+  # RabbitMQ for message brokering
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app-network
+
+  # Zipkin for distributed tracing
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
