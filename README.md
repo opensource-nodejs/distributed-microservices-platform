@@ -1,6 +1,4 @@
-Here is the complete response, merged into one:
 
----
 
 # Distributed Microservices Platform
 
